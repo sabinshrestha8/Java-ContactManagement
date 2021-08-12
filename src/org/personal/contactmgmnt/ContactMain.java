@@ -7,8 +7,36 @@ import java.util.Scanner;
 
 public class ContactMain {
     
+    private static final List <Contact> contacts = new LinkedList<>();
+    
+    private static void save(Contact contact) {
+        
+        contacts.add(contact);
+        
+    }
+    
+    private static void remove(Contact contact) {
+        
+        contacts.remove(contacts.indexOf(contact));
+
+    }
+    
+    private static void update(Contact contact) {
+        
+        contacts.set(contacts.indexOf(contact), contact);
+  
+    }
+    
+    private  static Contact findById(int id) {
+        for(Contact c: contacts) {
+            if(c.getId() == id) {
+               return c;
+            }
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
-        List <Contact> contacts = new LinkedList<>();
         Scanner scan = new Scanner(System.in);
         char cont;
         int id = 1;
@@ -44,19 +72,13 @@ public class ContactMain {
 
                     Contact contactOne = new Contact(id++, firstName, lastName, address, contactNumber);
                     
-                    contacts.add(contactOne);
+                    save(contactOne);
                     break;
                 case 2:
                     System.out.println("Enter an id ");
                     int updateId = scan.nextInt();
 
-                    Contact contactUpdate = null;
-                    for(Contact c: contacts) {
-                        if(c.getId() == updateId) {
-                           contactUpdate = c;
-                           break;
-                        }
-                    }  
+                    Contact contactUpdate = findById(updateId); 
 
                         if (contactUpdate != null) { 
                             
@@ -74,43 +96,27 @@ public class ContactMain {
                             contactUpdate.setLastName(lastNameUpdate);
                             contactUpdate.setAddress(addressUpdate);
                             contactUpdate.setContactNumber(contactNumberUpdate);
-                            contacts.set(contacts.indexOf(contactUpdate), contactUpdate);
+                            update(contactUpdate);
                             System.out.println("Contact updated Successfully");
 
                         } else {
                             System.out.println("Contact not found");
                         }
-                    System.out.println("update");
                     break;
-
-
                 case 3:
                     System.out.println("Enter an id ");
                     int contactId = scan.nextInt();
 
-                    Contact contact = null;
-                    for(Contact c: contacts) {
-                        if(c.getId() == contactId) {
-                           contact = c;
-                           break;
-                        }
-                    }  
-//                              Remove other way
-//                            contacts.remove(contacts.indexOf(c));
-//                            System.out.println("Contact found " +c);
-//                            System.out.println("contactUpdate removed successfully");
-//                        } else {
-//                            System.out.println("Contact not found");
-//                        }
-                        
+                    Contact contact = findById(contactId);
                         if (contact != null) { 
-                           contacts.remove(contacts.indexOf(contact));
+                            remove(contact);
                         } else {
                             System.out.println("Contact not found");
                         }
                     break;
                 case 4:
                     for(Contact c: contacts) {
+                        
                         System.out.println("Id " +c.getId());
                         System.out.println("firstName " +c.getFirstName());
                         System.out.println("lastName " +c.getLastName());
@@ -123,14 +129,10 @@ public class ContactMain {
                     System.out.println("Invalid choice");
             }
         
-            
-        
             System.out.println("Do you want to continue(y/Y)"); 
             cont = scan.next().charAt(0);
             
         } while (cont == 'Y' || cont == 'y');
-        
-        
         
     }
 }
